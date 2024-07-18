@@ -15,7 +15,7 @@ interface VerificationEmail {
   otp: string;
 }
 
-const EmailTemplate: React.FC<VerificationEmail> = ({ username, otp }) => {
+const VerificationEmail: React.FC<VerificationEmail> = ({ username, otp }) => {
   return (
     <Html>
       <Head />
