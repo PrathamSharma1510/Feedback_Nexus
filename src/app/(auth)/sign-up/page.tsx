@@ -17,11 +17,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
+import { ToastAction } from "@/components/ui/toast";
 const formSchema = signUpSchema;
 import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
 const Page = () => {
   const router = useRouter();
+  const { toast } = useToast();
   const [usernameMessage, setUsernameMessage] = useState<string | null>(null);
   const [isChecking, setIsChecking] = useState(false);
   const [isUsernameTaken, setIsUsernameTaken] = useState(false);
@@ -40,26 +42,29 @@ const Page = () => {
       setUsernameMessage(
         axiosError.response?.data?.message || "Error checking username."
       );
-
       setIsUsernameTaken(true);
     } finally {
       setIsChecking(false);
     }
   };
+
   const debouncedCheckUsername = useCallback(
     debounce((username: string) => {
       checkUsername(username);
     }, 500),
     []
   );
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
+
   useEffect(() => {
     const subscription = form.watch((value, { name }) => {
       if (name === "username" && value.username) {
@@ -68,20 +73,30 @@ const Page = () => {
     });
     return () => subscription.unsubscribe();
   }, [form.watch, debouncedCheckUsername]);
-  // Initialize the form with react-hook-form and zodResolver
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await axios.post("/api/sign-up", values);
-      router.replace(`/verify`);
+      toast({
+        title: "Success!",
+        description: "Sign-up successful. Please verify your email.",
+      });
+      router.replace(`/verify/${values.username}`);
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       const errorMessage =
         axiosError.response?.data?.message ||
         "There was a problem with your sign-up. Please try again.";
       console.error(errorMessage);
-      // Display the error message to the user, e.g., using a toast notification
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: errorMessage,
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
     }
   };
+
   return (
     <div className="flex w-full items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
@@ -96,7 +111,7 @@ const Page = () => {
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
-                  {isChecking && <p>Checking...</p>}
+                  {isChecking && <div>Checking...</div>}
                   {usernameMessage && (
                     <FormMessage
                       className={
