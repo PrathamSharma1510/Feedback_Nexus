@@ -4,11 +4,10 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { signInSchema } from "@/schemas/signInSchema";
+import { signUpSchema } from "@/schemas/signUpSchema";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -16,14 +15,15 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-const formSchema = signInSchema;
+const formSchema = signUpSchema;
 
 const Page = () => {
   // Initialize the form with react-hook-form and zodResolver
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      identifier: "",
+      username: "",
+      email: "",
       password: "",
     },
   });
@@ -36,10 +36,23 @@ const Page = () => {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
               control={form.control}
-              name="identifier"
+              name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username/Email</FormLabel>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -52,9 +65,9 @@ const Page = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>password</FormLabel>
+                  <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input type="password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -65,9 +78,9 @@ const Page = () => {
             </Button>
             <div className="text-center mt-4">
               <p className="text-sm">
-                Not registered?{" "}
-                <a href="/sign-up" className="text-blue-500 hover:underline">
-                  Registered
+                Already registered?{" "}
+                <a href="/sign-in" className="text-blue-500 hover:underline">
+                  SIGN IN
                 </a>
               </p>
             </div>
