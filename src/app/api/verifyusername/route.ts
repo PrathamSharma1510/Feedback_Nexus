@@ -1,7 +1,8 @@
-import dbConnect from "@/lib/bdConnect";
 import UserModel from "@/model/User";
 import { z } from "zod";
 import { usernameValidation } from "@/schemas/signUpSchema";
+import { NextResponse } from "next/server"; // Ensure you have this import for proper response handling
+import dbConnect from "@/lib/bdConnect";
 
 const UsernameQuerySchema = z.object({
   username: usernameValidation,
@@ -11,18 +12,19 @@ export async function GET(request: Request) {
   await dbConnect();
   try {
     const { searchParams } = new URL(request.url);
-    console.log(searchParams);
     const USNAME = {
       username: searchParams.get("username"),
     };
+
     const result = UsernameQuerySchema.safeParse(USNAME);
+    console.log(result);
     if (!result.success) {
       const usernameErrors = result.error.format().username?._errors || [];
-      return Response.json(
+      return NextResponse.json(
         {
           success: false,
           message:
-            usernameErrors?.length > 0
+            usernameErrors.length > 0
               ? usernameErrors.join(", ")
               : "Invalid query parameters",
         },
@@ -35,17 +37,22 @@ export async function GET(request: Request) {
       isVerified: true,
     });
     if (User) {
-      console.log(User);
-      return Response.json(
-        { message: "UserName already exists" },
+      return NextResponse.json(
+        { message: "Username already exists" },
         { status: 200 }
       );
     }
-    return Response.json({ message: "UserName is unique" }, { status: 200 });
+    return NextResponse.json(
+      { message: "Username is unique" },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Error checking username:", error);
-    return Response.json({
-      message: "Server error checking Username",
-    });
+    return NextResponse.json(
+      {
+        message: "Server error checking username",
+      },
+      { status: 500 }
+    );
   }
 }

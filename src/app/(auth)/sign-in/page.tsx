@@ -5,6 +5,7 @@ import { z } from "zod";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { signInSchema } from "@/schemas/signInSchema";
+import Link from "next/link";
 import {
   Form,
   FormControl,
@@ -66,9 +67,9 @@ const Page = () => {
             <div className="text-center mt-4">
               <p className="text-sm">
                 Not registered?{" "}
-                <a href="/sign-up" className="text-blue-500 hover:underline">
-                  Registered
-                </a>
+                <Link className="text-blue-500 hover:underline" href="/sign-up">
+                  SIGN UP
+                </Link>
               </p>
             </div>
           </form>
