@@ -11,6 +11,7 @@
   "dependencies": {
     "@ai-sdk/openai": "^0.0.36",
     "@hookform/resolvers": "^3.9.0",
+    "@radix-ui/react-alert-dialog": "^1.1.1",
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.1",
@@ -21,8 +22,10 @@
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "dayjs": "^1.11.12",
     "lodash.debounce": "^4.0.8",
     "lucide-react": "^0.408.0",
+    "mongoose": "^8.5.1",
     "moongoose": "^0.0.1",
     "next": "14.2.5",
     "next-auth": "^4.24.7",

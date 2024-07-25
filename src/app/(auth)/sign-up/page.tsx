@@ -167,12 +167,12 @@ const Page = () => {
               Submit
             </Button>
             <div className="text-center mt-4">
-              <p className="text-sm">
+              <div className="text-sm">
                 Already registered?{" "}
                 <Link className="text-blue-500 hover:underline" href="/sign-in">
                   SIGN IN
                 </Link>
-              </p>
+              </div>
             </div>
           </form>
         </Form>
