@@ -39,10 +39,6 @@ export default function SendMessage() {
 
   const messageContent = form.watch("content");
 
-  const handleMessageClick = (message: string) => {
-    form.setValue("content", message);
-  };
-
   const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async (data: z.infer<typeof messageSchema>) => {

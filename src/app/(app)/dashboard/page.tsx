@@ -18,6 +18,11 @@ export default function Page() {
 
   const DeleteMessage = (messageId: string) => {
     setMessages(messages.filter((message) => message._id !== messageId));
+    toast({
+      title: "Success",
+      description: "Message was deleted Successfully",
+    });
+    Deletefullmessage(messageId, session?.user.username);
   };
 
   const fetchAcceptMessage = useCallback(async () => {
@@ -37,6 +42,16 @@ export default function Page() {
     }
   }, [setValue, toast]);
 
+  const Deletefullmessage = async (messageId: string, username: string) => {
+    try {
+      const response = await axios.post("/api/delete-message", {
+        messageId,
+        username,
+      });
+    } catch (error) {
+      console.error("Error deleting message:", error);
+    }
+  };
   const fetchMessages = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -87,8 +102,12 @@ export default function Page() {
     }
   }, [value, toast]);
 
-  const baseUrl = `${window.location.protocol}//${window.location.host}`;
-  const profileUrl = `${baseUrl}/u/${session?.user.username}`;
+  const [profileUrl, setProfileUrl] = useState("");
+
+  useEffect(() => {
+    const baseUrl = `${window.location.protocol}//${window.location.host}`;
+    setProfileUrl(`${baseUrl}/u/${session?.user.username}`);
+  }, [session]);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(profileUrl);
@@ -145,7 +164,7 @@ export default function Page() {
             <div className="flex items-center space-x-2">
               <button
                 className="bg-red-500 text-white px-3 py-1 rounded-md"
-                // onClick={() => DeleteMessage(message._id)}
+                onClick={() => DeleteMessage(message._id)}
               >
                 Delete
               </button>
