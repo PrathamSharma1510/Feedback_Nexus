@@ -52,7 +52,9 @@ const Page = () => {
         title: "Success!",
         description: "Sign-in successful.",
       });
-      router.replace("/dashboard");
+      if (result?.url) {
+        router.replace("/dashboard");
+      }
     }
   };
 

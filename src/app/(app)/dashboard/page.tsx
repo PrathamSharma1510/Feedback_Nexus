@@ -6,13 +6,12 @@ import { useCallback, useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import axios, { AxiosError } from "axios";
 import { Switch } from "@headlessui/react";
-import { User } from "next-auth";
 import dayjs from "dayjs";
 
 export default function Page() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [value, setValue] = useState<boolean | null>(null);
+  const [value, setValue] = useState<boolean>(false); // Changed initial state to false
   const { toast } = useToast();
   const { data: session } = useSession();
 
@@ -20,7 +19,7 @@ export default function Page() {
     setMessages(messages.filter((message) => message._id !== messageId));
     toast({
       title: "Success",
-      description: "Message was deleted Successfully",
+      description: "Message was deleted successfully",
     });
     Deletefullmessage(messageId, session?.user.username);
   };
@@ -40,11 +39,11 @@ export default function Page() {
     } finally {
       setIsLoading(false);
     }
-  }, [setValue, toast]);
+  }, [toast]);
 
   const Deletefullmessage = async (messageId: string, username: string) => {
     try {
-      const response = await axios.post("/api/delete-message", {
+      await axios.post("/api/delete-message", {
         messageId,
         username,
       });
@@ -52,6 +51,7 @@ export default function Page() {
       console.error("Error deleting message:", error);
     }
   };
+
   const fetchMessages = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -75,7 +75,7 @@ export default function Page() {
 
     fetchAcceptMessage();
     fetchMessages();
-  }, [session, setValue, fetchAcceptMessage, fetchMessages]);
+  }, [session, fetchAcceptMessage, fetchMessages]);
 
   const toggleAcceptMessages = useCallback(async () => {
     if (value === null) return; // Ensure value is not null
@@ -106,7 +106,9 @@ export default function Page() {
 
   useEffect(() => {
     const baseUrl = `${window.location.protocol}//${window.location.host}`;
-    setProfileUrl(`${baseUrl}/u/${session?.user.username}`);
+    if (session?.user.username) {
+      setProfileUrl(`${baseUrl}/u/${session?.user.username}`);
+    }
   }, [session]);
 
   const copyToClipboard = () => {
@@ -130,7 +132,7 @@ export default function Page() {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Messages</h1>
         <Switch
-          // checked={value}
+          checked={value} // Added checked prop
           onChange={toggleAcceptMessages}
           className={`${value ? "bg-blue-500" : "bg-gray-300"}
             relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none`}
@@ -142,21 +144,20 @@ export default function Page() {
         </Switch>
       </div>
       <button
-        className="bg-blue-500 text-white px-3 py-1 rounded-md"
+        className="bg-blue-500 text-white px-3 py-1 rounded-md flex items-center space-x-2"
         onClick={() => copyToClipboard()}
       >
         <div>{profileUrl}</div>
-        Copy Link
+        <span>Copy Link</span>
       </button>
-      <div className="grid gap-4">
-        {messages.map((message, index) => (
+      <div className="grid gap-4 mt-4">
+        {messages.map((message) => (
           <div
             className="p-4 bg-white shadow-md rounded-lg flex justify-between items-start"
             key={message._id}
           >
             <div>
               <p className="text-lg font-semibold">{message.content}</p>
-
               <p className="text-sm text-gray-500">
                 {dayjs(message.createdAt).format("MMM D, YYYY h:mm A")}
               </p>
