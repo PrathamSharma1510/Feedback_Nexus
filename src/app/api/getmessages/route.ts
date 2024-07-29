@@ -1,9 +1,10 @@
-import UserModel from "@/model/User";
-import mongoose from "mongoose";
-import { User } from "next-auth";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "../auth/[...nextauth]/options";
-import dbConnect from "@/lib/bdConnect";
+
+import UserModel from '@/model/User';
+import mongoose from 'mongoose';
+import { User } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '../auth/[...nextauth]/options';
+import dbConnect from '@/lib/bdConnect';
 
 export async function GET(request: Request) {
   await dbConnect();
@@ -12,7 +13,7 @@ export async function GET(request: Request) {
 
   if (!session || !_user) {
     return Response.json(
-      { success: false, message: "Not authenticated" },
+      { success: false, message: 'Not authenticated' },
       { status: 401 }
     );
   }
@@ -20,14 +21,14 @@ export async function GET(request: Request) {
   try {
     const user = await UserModel.aggregate([
       { $match: { _id: userId } },
-      { $unwind: "$messages" },
-      { $sort: { "messages.createdAt": -1 } },
-      { $group: { _id: "$_id", messages: { $push: "$messages" } } },
+      { $unwind: '$messages' },
+      { $sort: { 'messages.createdAt': -1 } },
+      { $group: { _id: '$_id', messages: { $push: '$messages' } } },
     ]).exec();
 
     if (!user || user.length === 0) {
       return Response.json(
-        { message: "User not found", success: false },
+        { message: 'User not found', success: false },
         { status: 404 }
       );
     }
@@ -39,9 +40,9 @@ export async function GET(request: Request) {
       }
     );
   } catch (error) {
-    console.error("An unexpected error occurred:", error);
+    console.error('An unexpected error occurred:', error);
     return Response.json(
-      { message: "Internal server error", success: false },
+      { message: 'Internal server error', success: false },
       { status: 500 }
     );
   }

@@ -5,8 +5,11 @@ import { Message } from "@/model/User";
 import { useCallback, useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import axios, { AxiosError } from "axios";
+import { Switch } from "@headlessui/react";
+import { User } from "next-auth";
+import dayjs from "dayjs";
 
-export default function page() {
+export default function Page() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [value, setValue] = useState<boolean | null>(null);
@@ -37,7 +40,8 @@ export default function page() {
   const fetchMessages = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get("/api/fetch-messages");
+      const response = await axios.get("/api/getmessages");
+      console.log(response.data);
       setMessages(response.data.messages || []);
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
@@ -57,6 +61,7 @@ export default function page() {
     fetchAcceptMessage();
     fetchMessages();
   }, [session, setValue, fetchAcceptMessage, fetchMessages]);
+
   const toggleAcceptMessages = useCallback(async () => {
     if (value === null) return; // Ensure value is not null
 
@@ -82,8 +87,77 @@ export default function page() {
     }
   }, [value, toast]);
 
+  const baseUrl = `${window.location.protocol}//${window.location.host}`;
+  const profileUrl = `${baseUrl}/u/${session?.user.username}`;
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(profileUrl);
+    toast({
+      title: "URL Copied!",
+      description: "Profile URL has been copied to clipboard.",
+    });
+  };
+
   if (!session || !session.user) {
-    return <div>login plz</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        Please log in
+      </div>
+    );
   }
-  return <div></div>;
+
+  return (
+    <div className="container mx-auto p-4">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">Messages</h1>
+        <Switch
+          // checked={value}
+          onChange={toggleAcceptMessages}
+          className={`${value ? "bg-blue-500" : "bg-gray-300"}
+            relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none`}
+        >
+          <span
+            className={`${value ? "translate-x-6" : "translate-x-1"}
+              inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+          />
+        </Switch>
+      </div>
+      <button
+        className="bg-blue-500 text-white px-3 py-1 rounded-md"
+        onClick={() => copyToClipboard()}
+      >
+        <div>{profileUrl}</div>
+        Copy Link
+      </button>
+      <div className="grid gap-4">
+        {messages.map((message, index) => (
+          <div
+            className="p-4 bg-white shadow-md rounded-lg flex justify-between items-start"
+            key={message._id}
+          >
+            <div>
+              <p className="text-lg font-semibold">{message.content}</p>
+
+              <p className="text-sm text-gray-500">
+                {dayjs(message.createdAt).format("MMM D, YYYY h:mm A")}
+              </p>
+            </div>
+            <div className="flex items-center space-x-2">
+              <button
+                className="bg-red-500 text-white px-3 py-1 rounded-md"
+                // onClick={() => DeleteMessage(message._id)}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+      {isLoading && (
+        <div className="flex justify-center items-center mt-4">
+          <div className="loader"></div>
+        </div>
+      )}
+    </div>
+  );
 }
