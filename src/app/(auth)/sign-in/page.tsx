@@ -5,6 +5,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { signInSchema } from "@/schemas/signInSchema";
 import Link from "next/link";
+import { Spotlight } from "@/components/ui/spotlight";
 import {
   Form,
   FormControl,
@@ -59,8 +60,12 @@ const Page = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+    <div className="flex items-center justify-center min-h-screen ">
+      <div className="p-8 rounded-lg antialiased shadow-md w-full max-w-md">
+        {/* <Spotlight
+          className="-top-40 left-0 md:left-60 md:-top-20"
+          fill="white"
+        /> */}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
@@ -89,7 +94,7 @@ const Page = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
+            <Button variant="secondary" type="submit" className="w-full">
               Submit
             </Button>
             <div className="text-center mt-4">

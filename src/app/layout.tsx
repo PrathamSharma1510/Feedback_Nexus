@@ -19,7 +19,6 @@ export default async function RootLayout({ children }: RootLayoutProps) {
     <html lang="en" className="dark">
       <AuthProvider>
         <body className={inter.className}>
-          <Navbar />
           {children}
           <Toaster />
         </body>

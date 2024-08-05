@@ -68,8 +68,8 @@ const Page = () => {
   };
 
   return (
-    <div className="flex w-full items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+    <div className="flex w-full items-center justify-center min-h-screen">
+      <div className=" p-8 rounded-lg shadow-md w-full max-w-md">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
@@ -85,7 +85,7 @@ const Page = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
+            <Button type="submit" variant="secondary" className="w-full">
               Submit
             </Button>
           </form>

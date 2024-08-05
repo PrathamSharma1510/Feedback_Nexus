@@ -68,8 +68,8 @@ export default function SendMessage() {
   };
 
   return (
-    <div className="container mx-auto my-8 p-6 bg-white rounded-lg shadow-lg max-w-3xl dark:bg-gray-900">
-      <h1 className="text-3xl font-semibold mb-6 text-center text-gray-800 dark:text-white">
+    <div className="container mx-auto my-8 p-6 bg-white rounded-lg shadow-lg max-w-3xl">
+      <h1 className="text-3xl font-semibold mb-6 text-center text-gray-800">
         Send Anonymous Message to @{username}
       </h1>
       <Form {...form}>
@@ -79,13 +79,13 @@ export default function SendMessage() {
             name="content"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-lg font-medium text-gray-700 dark:text-gray-300">
+                <FormLabel className="text-lg font-medium text-gray-700">
                   Your Message
                 </FormLabel>
                 <FormControl>
                   <Textarea
                     placeholder="Write your anonymous message here..."
-                    className="resize-none mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                    className="resize-none mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                     {...field}
                   />
                 </FormControl>
@@ -108,9 +108,9 @@ export default function SendMessage() {
         </form>
       </Form>
 
-      <Separator className="my-8 dark:border-gray-700" />
+      <Separator className="my-8" />
       <div className="text-center">
-        <div className="mb-4 text-lg text-gray-600 dark:text-gray-400">
+        <div className="mb-4 text-lg text-gray-600">
           Want your own Message Board?
         </div>
         <Link href={"/sign-up"}>
