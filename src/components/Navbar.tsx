@@ -30,6 +30,13 @@ const Navbar = ({ className }: { className?: string }) => {
             <MenuItem setActive={setActive} active={active} item="Profile">
               {user.username || user.email}
             </MenuItem>
+            <Link href={"/dashboard"}>
+              <MenuItem
+                setActive={setActive}
+                active={active}
+                item="Dashboard"
+              ></MenuItem>
+            </Link>
             <div onClick={() => signOut()}>
               <MenuItem
                 setActive={setActive}
