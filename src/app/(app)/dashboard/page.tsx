@@ -8,7 +8,8 @@ import axios, { AxiosError } from "axios";
 import { Switch } from "@headlessui/react";
 import dayjs from "dayjs";
 import { HoverEffect } from "@/components/ui/card-hover-effect";
-
+import { motion } from "framer-motion";
+import { HeroHighlight, Highlight } from "@/components/ui/hero-highlight";
 export default function Page() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -129,29 +130,62 @@ export default function Page() {
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Messages</h1>
-        <Switch
-          checked={value} // Added checked prop
-          onChange={toggleAcceptMessages}
-          className={`${value ? "bg-blue-500" : "bg-gray-300"}
-            relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none`}
+    <div>
+      <HeroHighlight>
+        <motion.h1
+          initial={{
+            opacity: 0,
+            y: 20,
+          }}
+          animate={{
+            opacity: 1,
+            y: [20, -5, 0],
+          }}
+          transition={{
+            duration: 0.5,
+            ease: [0.4, 0.0, 0.2, 1],
+          }}
+          className="mb-5 text-2xl px-4 md:text-4xl lg:text-3xl font-bold text-neutral-700 dark:text-white max-w-3xl leading-relaxed lg:leading-snug mx-auto "
         >
-          <span
-            className={`${value ? "translate-x-6" : "translate-x-1"}
+          Your Link{" "}
+          <div className="cursor-pointer" onClick={() => copyToClipboard()}>
+            <Highlight className="text-black dark:text-white">
+              {profileUrl}
+            </Highlight>
+          </div>
+          <div className="absolute left-full top-1/2 transform -translate-y-1/2 ml-2 p-2 bg-gray-800 text-white text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-100">
+            Click to Copy
+          </div>
+        </motion.h1>
+        <div className="flex justify-evenly mt-5">
+          {value ? (
+            <>
+              <p className="text-4xl font-bold  bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500">
+                Accepting message
+              </p>
+            </>
+          ) : (
+            <p className="text-3xl font-bold  bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500">
+              Not Accepting message
+            </p>
+          )}
+          <Switch
+            checked={value}
+            onChange={toggleAcceptMessages}
+            className={`${value ? "bg-blue-500" : "bg-gray-300"}
+             relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none`}
+          >
+            <span
+              className={`${value ? "translate-x-6" : "translate-x-1"}
               inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
-          />
-        </Switch>
-      </div>
-      <button
-        className="bg-blue-500 text-white px-3 py-1 rounded-md flex items-center space-x-2"
-        onClick={() => copyToClipboard()}
-      >
-        <div>{profileUrl}</div>
-        <span>Copy Link</span>
-      </button>
+            />
+          </Switch>
+        </div>
+      </HeroHighlight>
       <div className="max-w-5xl mx-auto px-8">
+        <p className="text-4xl font-bold relative z-20 bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 mt-5">
+          Number of messages :- {messages.length}
+        </p>
         <HoverEffect items={messages} onDeleteMessage={DeleteMessage} />
       </div>
       {/* <div className="grid gap-4 mt-4">
