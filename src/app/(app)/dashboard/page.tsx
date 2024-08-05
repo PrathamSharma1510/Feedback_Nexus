@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import axios, { AxiosError } from "axios";
 import { Switch } from "@headlessui/react";
 import dayjs from "dayjs";
+import { HoverEffect } from "@/components/ui/card-hover-effect";
 
 export default function Page() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -150,7 +151,10 @@ export default function Page() {
         <div>{profileUrl}</div>
         <span>Copy Link</span>
       </button>
-      <div className="grid gap-4 mt-4">
+      <div className="max-w-5xl mx-auto px-8">
+        <HoverEffect items={messages} />
+      </div>
+      {/* <div className="grid gap-4 mt-4">
         {messages.map((message) => (
           <div
             className="p-4 bg-white shadow-md rounded-lg flex justify-between items-start"
@@ -172,7 +176,7 @@ export default function Page() {
             </div>
           </div>
         ))}
-      </div>
+      </div> */}
       {isLoading && (
         <div className="flex justify-center items-center mt-4">
           <div className="loader"></div>
