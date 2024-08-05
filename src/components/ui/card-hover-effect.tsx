@@ -8,9 +8,11 @@ import { Button } from "./moving-border";
 export const HoverEffect = ({
   items,
   className,
+  onDeleteMessage,
 }: {
   items: Message[];
   className?: string;
+  onDeleteMessage: (messageId: string) => void;
 }) => {
   let [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
@@ -23,7 +25,7 @@ export const HoverEffect = ({
     >
       {items.map((item, idx) => (
         <div
-          key={item?.message_id}
+          key={item?._id}
           className="relative group  block p-2 h-full w-full"
           onMouseEnter={() => setHoveredIndex(idx)}
           onMouseLeave={() => setHoveredIndex(null)}
@@ -48,7 +50,10 @@ export const HoverEffect = ({
           <Card>
             <CardDescription>{item.content}</CardDescription>
             <div className="mb-20"></div>
-            <button className="mt-5 mb-4 absolute bottom-5 inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
+            <button
+              onClick={() => onDeleteMessage(item._id)}
+              className="mt-5 mb-4 absolute bottom-5 inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
+            >
               <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
               <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl">
                 Delete

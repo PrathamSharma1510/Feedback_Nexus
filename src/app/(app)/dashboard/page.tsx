@@ -152,7 +152,7 @@ export default function Page() {
         <span>Copy Link</span>
       </button>
       <div className="max-w-5xl mx-auto px-8">
-        <HoverEffect items={messages} />
+        <HoverEffect items={messages} onDeleteMessage={DeleteMessage} />
       </div>
       {/* <div className="grid gap-4 mt-4">
         {messages.map((message) => (
