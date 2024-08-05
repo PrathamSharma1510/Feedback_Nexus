@@ -77,6 +77,7 @@ const Page = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await axios.post("/api/sign-up", values);
+
       toast({
         title: "Success!",
         description: "Sign-up successful. Please verify your email.",
@@ -84,14 +85,11 @@ const Page = () => {
       router.replace(`/verify/${values.username}`);
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
-      const errorMessage =
-        axiosError.response?.data?.message ||
-        "There was a problem with your sign-up. Please try again.";
-      console.error(errorMessage);
+      const message = axiosError.response?.data.message;
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
-        description: errorMessage,
+        description: message,
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       });
     }

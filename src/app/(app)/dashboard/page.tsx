@@ -107,8 +107,8 @@ export default function Page() {
   const [profileUrl, setProfileUrl] = useState("");
 
   useEffect(() => {
-    const baseUrl = `${window.location.protocol}//${window.location.host}`;
-    if (session?.user.username) {
+    if (typeof window !== "undefined" && session?.user.username) {
+      const baseUrl = `${window.location.protocol}//${window.location.host}`;
       setProfileUrl(`${baseUrl}/u/${session?.user.username}`);
     }
   }, [session]);
