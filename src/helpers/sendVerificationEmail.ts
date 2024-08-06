@@ -20,7 +20,7 @@ export async function sendVerificationEmail(
 
     return {
       success: true,
-      message: "Email Sent Success",
+      message: `Email Sent Success ${email}`,
     };
   } catch (emailerror) {
     return {

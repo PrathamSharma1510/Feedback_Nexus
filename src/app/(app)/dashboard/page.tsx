@@ -9,6 +9,9 @@ import { Switch } from "@headlessui/react";
 import { Loader, Placeholder } from "rsuite";
 import { HoverEffect } from "@/components/ui/card-hover-effect";
 import { motion } from "framer-motion";
+import { IconButton } from "@material-tailwind/react";
+import { useCopyToClipboard } from "usehooks-ts";
+import { CheckIcon, DocumentDuplicateIcon } from "@heroicons/react/24/outline";
 import { HeroHighlight, Highlight } from "@/components/ui/hero-highlight";
 export default function Page() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -62,11 +65,13 @@ export default function Page() {
       setMessages(response.data.messages || []);
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
-      toast({
-        title: "Error",
-        description:
-          axiosError.response?.data?.message ?? "Failed to fetch messages",
-      });
+      if (axiosError.response?.data?.message != "No message found") {
+        toast({
+          title: "Error",
+          description:
+            axiosError.response?.data?.message ?? "Failed to fetch messages",
+        });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -113,6 +118,8 @@ export default function Page() {
     }
   }, [session]);
 
+  const [valuec, copy] = useCopyToClipboard();
+  const [copied, setCopied] = useState(false);
   const copyToClipboard = () => {
     navigator.clipboard.writeText(profileUrl);
     toast({
@@ -171,9 +178,23 @@ export default function Page() {
               {profileUrl}
             </Highlight>
           </div>
-          <div className="absolute left-full top-1/2 transform -translate-y-1/2 ml-2 p-2 bg-gray-800 text-white text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-100">
+          <IconButton
+            className="absolute left-full transform -translate-y-1/2 ml-2 p-2 bg-gray-800 text-white text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-100"
+            onMouseLeave={() => setCopied(false)}
+            onClick={() => {
+              copyToClipboard();
+              setCopied(true);
+            }}
+          >
+            {copied ? (
+              <CheckIcon className="h-5 w-5 text-white" />
+            ) : (
+              <DocumentDuplicateIcon className="h-5 w-5 text-white" />
+            )}
+          </IconButton>
+          {/* <div className="absolute left-full top-1/2 transform -translate-y-1/2 ml-2 p-2 bg-gray-800 text-white text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-100">
             Click to Copy
-          </div>
+          </div> */}
         </motion.h1>
         <div className="flex justify-evenly mt-5">
           {value ? (
