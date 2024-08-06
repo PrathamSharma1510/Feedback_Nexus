@@ -40,7 +40,7 @@ const Navbar = ({ className }: { className?: string }) => {
             <div
               onClick={() =>
                 signOut({
-                  callbackUrl: `process.env.NEXTAUTH_URL`,
+                  callbackUrl: process.env.NEXTAUTH_URL,
                   redirect: true,
                 })
               }
