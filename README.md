@@ -1,7 +1,3 @@
-Here's a comprehensive README file for your Feedback Nexus project. This README includes sections on functionality, features, setup, and more, making it informative and useful for developers and users alike.
-
----
-
 # Feedback Nexus
 
 Welcome to **Feedback Nexus**, a platform revolutionizing feedback collection. Perfect for educators and professionals, our tool enables anonymous feedback, ensuring honest and constructive responses. With personalized dashboards and unique sharing links, Feedback Nexus offers a seamless, secure way to engage with your audience, enhancing growth and learning.
@@ -36,11 +32,6 @@ Welcome to **Feedback Nexus**, a platform revolutionizing feedback collection. P
 - **Industry Adaptability:** Perfect for HR evaluations, customer satisfaction surveys, and event feedback.
 - **Flexible Reporting:** Generate insightful reports and visualizations tailored to various fields and needs.
 
-### Feedback Analytics
-
-- **Secure Storage:** All feedback is stored securely with advanced encryption protocols.
-- **User Management:** Manage and organize your feedback with tags, folders, and custom categories.
-
 ## Tech Stack
 
 Feedback Nexus is developed using the latest technologies to ensure a robust and scalable platform:
@@ -51,7 +42,7 @@ Feedback Nexus is developed using the latest technologies to ensure a robust and
 - **Validation:** ZOD for input validation
 - **Authentication:** NextAuth for authentication with cookies and session management
 - **Email Verification:** Resend for email verification code
-- **Deployment:** Vercel for seamless Next.js deployment
+- **Deployment:** Netlify for seamless Next.js deployment
 
 ## Installation
 
@@ -67,7 +58,7 @@ Feedback Nexus is developed using the latest technologies to ensure a robust and
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/yourusername/feedback-nexus.git
+   git clone https://github.com/PrathamSharma1510/message.
    cd feedback-nexus
    ```
 
@@ -104,21 +95,30 @@ Feedback Nexus is developed using the latest technologies to ensure a robust and
 1. **Sign Up**: Create an account using your email and verify it through the link sent via Resend.
 2. **Create Surveys**: Use the dashboard to create customizable surveys tailored to your needs.
 3. **Share Links**: Generate unique feedback links to share with your audience.
-4. **Analyze Feedback**: Access real-time updates and detailed analytics through your personalized dashboard.
+   Here's an overview of your API endpoints, formatted in the concise style you provided:
+
+---
 
 ## API Endpoints
 
-Here's a quick overview of the available API endpoints:
+Here's a quick overview of some available API endpoints:
 
-- **Auth**
-  - `POST /api/auth/sign-up`: Register a new user.
-  - `POST /api/auth/verifycode`: Verify email using the code sent.
-  - `POST /api/auth/verifyusername`: Verify the uniqueness of a username.
-- **Messages**
-  - `POST /api/send-message`: Send feedback messages.
-  - `GET /api/getmessages`: Retrieve all feedback messages.
-  - `DELETE /api/delete-message`: Delete a specific message.
-  - `POST /api/acceptmessage`: Accept or process a feedback message.
+### Auth
+
+- **POST `/api/auth/sign-up`**: Register a new user.
+- **POST `/api/auth/verifycode`**: Verify email using the code sent.
+- **GET `/api/auth/verifyusername`**: Verify the uniqueness of a username.
+
+### Messages
+
+- **POST `/api/send-message`**: Send a feedback message.
+- **GET `/api/getmessages`**: Retrieve all feedback messages for the authenticated user.
+- **POST `/api/delete-message`**: Delete a specific message by ID.
+- **POST `/api/acceptmessage`**: Accept or process a feedback message based on user preferences.
+
+### User Management
+
+- **GET `/api/user-messages`**: Retrieve all messages for the authenticated user, sorted by creation date.
 
 ## Contributing
 
@@ -130,10 +130,13 @@ We welcome contributions from the community! Please follow these steps to contri
 4. Push to the branch (`git push origin feature/YourFeatureName`).
 5. Open a pull request.
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Here's the updated API Endpoints section for your README file, including a contact section for issues:
 
 ---
 
-This README provides a clear overview of the Feedback Nexus project, including its features, tech stack, installation instructions, usage, API endpoints, and contribution guidelines. Feel free to customize it further based on your project's specific details or additional features.
+## Contact
+
+For any issues or inquiries, please contact:
+
+**Pratham Sharma**  
+Email: [sharmapratham@ufl.edu](mailto:sharmapratham@ufl.edu)

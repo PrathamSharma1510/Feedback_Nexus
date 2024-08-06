@@ -5,8 +5,7 @@ import AuthProvider from "@/context/AuthProvider";
 import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
-  title: "True Feedback",
-  description: "Real feedback from real people.",
+  title: "Feedback Nexuss",
 };
 
 interface RootLayoutProps {
