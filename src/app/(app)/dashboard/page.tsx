@@ -170,21 +170,24 @@ export default function Page() {
             duration: 0.5,
             ease: [0.4, 0.0, 0.2, 1],
           }}
-          className="mb-5 text-2xl px-4 md:text-4xl lg:text-3xl font-bold text-neutral-700 dark:text-white max-w-3xl leading-relaxed lg:leading-snug mx-auto "
+          className="mb-5 text-lg sm:text-xl md:text-3xl lg:text-4xl font-bold text-neutral-700 dark:text-white max-w-3xl leading-relaxed lg:leading-snug mx-auto px-2 sm:px-4"
         >
           Your Link{" "}
-          <div className="cursor-pointer" onClick={() => copyToClipboard()}>
-            <Highlight className="text-black dark:text-white">
+          <div
+            className="cursor-pointer inline-block"
+            onClick={() => copyToClipboard()}
+          >
+            <Highlight className="text-black dark:text-white break-all">
               {profileUrl}
             </Highlight>
           </div>
           <IconButton
-            // className="absolute left-full ml-2 p-2 bg-gray-800 text-white text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-100"
             onMouseLeave={() => setCopied(false)}
             onClick={() => {
               copyToClipboard();
               setCopied(true);
             }}
+            className="ml-2"
           >
             {copied ? (
               <CheckIcon className="h-5 w-5 text-white" />
@@ -192,39 +195,37 @@ export default function Page() {
               <DocumentDuplicateIcon className="h-5 w-5 text-white" />
             )}
           </IconButton>
-          {/* <div className="absolute left-full top-1/2 transform -translate-y-1/2 ml-2 p-2 bg-gray-800 text-white text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-100">
-            Click to Copy
-          </div> */}
         </motion.h1>
-        <div className="flex justify-evenly mt-5">
+
+        <div className="flex flex-col sm:flex-row items-center justify-evenly mt-5 space-y-3 sm:space-y-0">
           {value ? (
-            <>
-              <p className="text-4xl font-bold  bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500">
-                Accepting message
-              </p>
-            </>
+            <p className="text-2xl sm:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500">
+              Accepting messages
+            </p>
           ) : (
-            <p className="text-3xl font-bold  bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500">
-              Not Accepting message
+            <p className="text-2xl sm:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500">
+              Not Accepting messages
             </p>
           )}
           <Switch
             checked={value}
             onChange={toggleAcceptMessages}
             className={`${value ? "bg-blue-500" : "bg-gray-300"}
-             relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none`}
+      relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none`}
           >
             <span
               className={`${value ? "translate-x-6" : "translate-x-1"}
-              inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+        inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
             />
           </Switch>
         </div>
       </HeroHighlight>
-      <div className="max-w-5xl mx-auto px-8">
-        <p className="text-4xl font-bold relative z-20 bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 mt-5">
-          Number of messages :- {messages.length}
+
+      <div className="max-w-5xl mx-auto">
+        <p className="text-2xl sm:text-4xl md:text-4xl lg:text-5xl font-bold relative z-20 bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 mt-3 sm:mt-4 md:mt-5 lg:mt-6 text-center">
+          Number of messages: {messages.length}
         </p>
+
         <HoverEffect items={messages} onDeleteMessage={DeleteMessage} />
       </div>
       {/* <div className="grid gap-4 mt-4">

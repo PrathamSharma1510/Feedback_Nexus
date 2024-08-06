@@ -139,7 +139,7 @@ export default function Home() {
             />
           </div>
         </div>
-        <div className="relative h-[40rem] overflow-hidden flex items-center justify-center">
+        <div className="relative w-full overflow-hidden flex items-center justify-center">
           <WavyBackgroundcontent />
         </div>
 

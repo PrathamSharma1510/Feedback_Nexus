@@ -4,7 +4,7 @@ import { WavyBackground } from "./ui/wavy-background";
 
 export function WavyBackgroundcontent() {
   return (
-    <WavyBackground className="max-w-4xl mx-auto pb-40">
+    <WavyBackground className="max-w-4xl  mx-auto pb-40">
       <p className="text-2xl md:text-3xl lg:text-6xl text-white font-bold inter-var text-center">
         Empower Your Voice with Feedback Nexus
       </p>
