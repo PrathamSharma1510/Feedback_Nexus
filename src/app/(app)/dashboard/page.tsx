@@ -179,7 +179,7 @@ export default function Page() {
             </Highlight>
           </div>
           <IconButton
-            className="absolute left-full transform -translate-y-1/2 ml-2 p-2 bg-gray-800 text-white text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-100"
+            // className="absolute left-full ml-2 p-2 bg-gray-800 text-white text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-100"
             onMouseLeave={() => setCopied(false)}
             onClick={() => {
               copyToClipboard();
