@@ -70,7 +70,8 @@ const Page = () => {
             Back to{" "}
             <Link className="text-blue-500 hover:underline" href={"/"}>
               Home
-            </Link>
+            </Link>{" "}
+            for Demo Login
           </p>
         </div>
         <Form {...form}>

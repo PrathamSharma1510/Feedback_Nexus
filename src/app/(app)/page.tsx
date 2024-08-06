@@ -143,13 +143,15 @@ export default function Home() {
           <WavyBackgroundcontent />
         </div>
 
-        <footer className="w-full">
-          <div className="relative h-35 md:h-64 w-full overflow-hidden bg-slate-900 flex items-center justify-center rounded-lg">
+        <footer className="w-full px-4 py-6 bg-slate-900">
+          <div className="relative h-48 md:h-64 w-full overflow-hidden bg-slate-900 flex items-center justify-center rounded-lg">
             <div className="absolute inset-0 w-full h-full bg-slate-900 z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
             <Boxes />
             <div className="text-center relative z-20">
-              <h1 className="md:text-4xl text-xl text-white">Feedback Nexus</h1>
-              <p className="mt-4 text-sm">
+              <h1 className="text-2xl md:text-4xl text-white">
+                Feedback Nexus
+              </h1>
+              <p className="mt-2 text-xs md:text-sm text-gray-300">
                 © 2024 Feedback Nexus. All rights reserved. Built with ❤️ by
                 Pratham.
               </p>
