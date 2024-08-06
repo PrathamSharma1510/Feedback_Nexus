@@ -2,12 +2,17 @@ import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
-import { Message } from "@/model/User";
+
 import dayjs from "dayjs";
 import { Button } from "./moving-border";
+interface Message {
+  content: string; // Message content
+  _id: string; // Message ID
+  createdAt: string; // Message creation date
+}
 export const HoverEffect = ({
   items,
-  className,
+  // className,
   onDeleteMessage,
 }: {
   items: Message[];
@@ -18,10 +23,7 @@ export const HoverEffect = ({
 
   return (
     <div
-      className={cn(
-        "grid grid-cols-1 md:grid-cols-2  lg:grid-cols-2  py-10",
-        className
-      )}
+      className={cn("grid grid-cols-1 md:grid-cols-2  lg:grid-cols-2  py-10")}
     >
       {items.map((item, idx) => (
         <div

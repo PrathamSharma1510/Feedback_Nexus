@@ -1,7 +1,7 @@
 "use client";
 
 import { useToast } from "@/components/ui/use-toast";
-import { Message } from "@/model/User";
+// import { Message } from "@/model/User";
 import { useCallback, useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import axios, { AxiosError } from "axios";
@@ -13,6 +13,13 @@ import { IconButton } from "@material-tailwind/react";
 import { useCopyToClipboard } from "usehooks-ts";
 import { CheckIcon, DocumentDuplicateIcon } from "@heroicons/react/24/outline";
 import { HeroHighlight, Highlight } from "@/components/ui/hero-highlight";
+import { Button } from "@/components/ui/moving-border";
+interface Message {
+  _id: string;
+  content: string;
+  createdAt: string;
+}
+
 export default function Page() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -181,20 +188,19 @@ export default function Page() {
               {profileUrl}
             </Highlight>
           </div>
-          <IconButton
+          <Button
             onMouseLeave={() => setCopied(false)}
             onClick={() => {
               copyToClipboard();
               setCopied(true);
             }}
-            className="ml-2"
           >
             {copied ? (
               <CheckIcon className="h-5 w-5 text-white" />
             ) : (
               <DocumentDuplicateIcon className="h-5 w-5 text-white" />
             )}
-          </IconButton>
+          </Button>
         </motion.h1>
 
         <div className="flex flex-col sm:flex-row items-center justify-evenly mt-5 space-y-3 sm:space-y-0">
