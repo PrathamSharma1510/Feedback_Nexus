@@ -4,10 +4,12 @@ import { Toaster } from "@/components/ui/toaster";
 import AuthProvider from "@/context/AuthProvider";
 import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
-export const metadata: Metadata = {
+export const metadata = {
   title: "Feedback Nexuss",
+  description: "Your feedback management system",
   icons: {
-    icon: ["../app/favicon.ico"],
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
   },
 };
 
