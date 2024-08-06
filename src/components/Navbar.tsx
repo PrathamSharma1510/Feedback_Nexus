@@ -37,7 +37,7 @@ const Navbar = ({ className }: { className?: string }) => {
                 item="Dashboard"
               ></MenuItem>
             </Link>
-            <div onClick={() => signOut()}>
+            <div onClick={() => signOut({ callbackUrl: "/" })}>
               <MenuItem
                 setActive={setActive}
                 active={active}

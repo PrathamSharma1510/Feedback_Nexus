@@ -188,7 +188,8 @@ export default function Page() {
               {profileUrl}
             </Highlight>
           </div>
-          <Button
+          <button
+            className="w-1/2"
             onMouseLeave={() => setCopied(false)}
             onClick={() => {
               copyToClipboard();
@@ -200,16 +201,16 @@ export default function Page() {
             ) : (
               <DocumentDuplicateIcon className="h-5 w-5 text-white" />
             )}
-          </Button>
+          </button>
         </motion.h1>
 
-        <div className="flex flex-col sm:flex-row items-center justify-evenly mt-5 space-y-3 sm:space-y-0">
+        <div className="sm:flex px-5 sm:flex-row justify-between items-center mt-5 space-y-4 sm:space-y-0">
           {value ? (
-            <p className="text-2xl sm:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500">
+            <p className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500">
               Accepting messages
             </p>
           ) : (
-            <p className="text-2xl sm:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500">
+            <p className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500">
               Not Accepting messages
             </p>
           )}
@@ -217,11 +218,11 @@ export default function Page() {
             checked={value}
             onChange={toggleAcceptMessages}
             className={`${value ? "bg-blue-500" : "bg-gray-300"}
-      relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none`}
+    relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ml-4`}
           >
             <span
-              className={`${value ? "translate-x-6" : "translate-x-1"}
-        inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+              className={`${value ? "translate-x-5" : "translate-x-1"}
+      inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
             />
           </Switch>
         </div>
