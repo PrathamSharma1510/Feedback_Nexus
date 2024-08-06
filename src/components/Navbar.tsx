@@ -37,7 +37,14 @@ const Navbar = ({ className }: { className?: string }) => {
                 item="Dashboard"
               ></MenuItem>
             </Link>
-            <div onClick={() => signOut({ callbackUrl: "/", redirect: true })}>
+            <div
+              onClick={() =>
+                signOut({
+                  callbackUrl: `process.env.NEXTAUTH_URL`,
+                  redirect: true,
+                })
+              }
+            >
               <MenuItem
                 setActive={setActive}
                 active={active}
