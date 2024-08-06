@@ -23,13 +23,6 @@ export default function Home() {
     "Engagement",
   ];
   {
-    /* <div className="h-[40rem] px-4">
-    <div className="text-4xl mx-auto font-normal">
-      Build
-      <FlipWords words={words} /> <br />
-      websites with Aceternity UI
-    </div>
-  </div> */
   }
   const features = [
     {
