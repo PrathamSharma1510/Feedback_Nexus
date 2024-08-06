@@ -4,8 +4,24 @@ import { Spotlight } from "@/components/ui/spotlight";
 import Link from "next/link";
 import { InfiniteMovingCards } from "@/components/ui/infinite-moving-cards";
 import { WavyBackgroundcontent } from "@/components/wavy";
+import { features } from "process";
+import { Boxes } from "@/components/ui/background-boxes";
 export default function Home() {
-  const words = ["better", "cute", "beautiful", "modern"];
+  const words1 = [
+    "Better",
+    "Insightful",
+    "Transformative",
+    "Impactful",
+    "Effective",
+  ];
+  const words2 = [
+    "Conversations",
+    "Connections",
+    "Feedback",
+    "Insights",
+    "Interactions",
+    "Engagement",
+  ];
   {
     /* <div className="h-[40rem] px-4">
     <div className="text-4xl mx-auto font-normal">
@@ -15,37 +31,36 @@ export default function Home() {
     </div>
   </div> */
   }
-  const testimonials = [
+  const features = [
     {
-      quote:
-        "It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair.",
-      name: "Charles Dickens",
-      title: "A Tale of Two Cities",
+      quote: `
+        User-Friendly Interface: A sleek, intuitive design that makes navigation a breeze.
+        Unique Feedback Links: Generate personalized URLs to share with your audience, ensuring a private and tailored experience.
+        Real-time Updates: Receive feedback instantly and stay informed with live updates.`,
+      title: "Personalized Dashboard",
     },
     {
-      quote:
-        "To be, or not to be, that is the question: Whether 'tis nobler in the mind to suffer The slings and arrows of outrageous fortune, Or to take Arms against a Sea of troubles, And by opposing end them: to die, to sleep.",
-      name: "William Shakespeare",
-      title: "Hamlet",
+      quote: `
+        Confidentiality Ensured: Gather honest opinions with complete anonymity for feedback providers.
+        Customizable Surveys: Create tailored questionnaires to suit various domains, from education to corporate training.
+        Multi-Domain Utility: Perfect for educators, HR professionals, event organizers, and more.`,
+      title: "Anonymous Feedback",
     },
     {
-      quote: "All that we see or seem is but a dream within a dream.",
-      name: "Edgar Allan Poe",
-      title: "A Dream Within a Dream",
+      quote: `
+        Versatile Feedback Collection: Ideal for teachers seeking class feedback, professors conducting end-of-course surveys, and professionals gathering client insights.
+        Industry Adaptability: Perfect for HR evaluations, customer satisfaction surveys, and event feedback.
+        Flexible Reporting: Generate insightful reports and visualizations tailored to various fields and needs.`,
+      title: "Feedback Analytics",
     },
     {
-      quote:
-        "It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife.",
-      name: "Jane Austen",
-      title: "Pride and Prejudice",
-    },
-    {
-      quote:
-        "Call me Ishmael. Some years ago—never mind how long precisely—having little or no money in my purse, and nothing particular to interest me on shore, I thought I would sail about a little and see the watery part of the world.",
-      name: "Herman Melville",
-      title: "Moby-Dick",
+      quote: `
+        Secure Storage: All feedback is stored securely with advanced encryption protocols.
+        User Management: Manage and organize your feedback with tags, folders, and custom categories.`,
+      title: "Additional Features",
     },
   ];
+
   return (
     <>
       <main className="min-h-screen bg-black/[0.96] antialiased bg-grid-white/[0.02]">
@@ -55,13 +70,17 @@ export default function Home() {
             fill="white"
           />
           <div className="p-4 relative z-10 w-full text-center">
-            <h1 className="mt-5 md:mt-0 text-4xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400">
-              Master the art of music
-            </h1>
-            <p className="mt-4 font-normal text-base md:text-lg text-neutral-300 max-w-lg mx-auto">
-              Dive into our comprehensive music courses and transform your
-              musical journey today. Whether you're a beginner or looking to
-              refine your skills, join us to unlock your true potential.
+            <div className="mt-4 mx-auto md:mt-0 text-3xl md:text-6xl font-bold bg-clip-text bg-gradient-to-b from-neutral-50 to-neutral-400">
+              Feedback Nexus: <FlipWords words={words1} /> <br />{" "}
+              <FlipWords words={words2} /> <br />
+            </div>
+            <p className="mt-4 font-normal text-base md:text-lg text-neutral-300 max-w-2xl mx-auto">
+              Welcome to Feedback Nexus, a platform revolutionizing feedback
+              collection. Perfect for educators and professionals, our tool
+              enables anonymous feedback, ensuring honest and constructive
+              responses. With personalized dashboards and unique sharing links,
+              Feedback Nexus offers a seamless, secure way to engage with your
+              audience, enhancing growth and learning.
             </p>
             <div className="mt-10">
               <Link href={"/courses"}>
@@ -75,17 +94,35 @@ export default function Home() {
             </div>
           </div>
         </div>
-
         <div className="h-[40rem] w-full dark:bg-black dark:bg-grid-white/[0.2] relative flex flex-col items-center justify-center overflow-hidden">
-          <InfiniteMovingCards
-            items={testimonials}
-            direction="right"
-            speed="slow"
-          />
+          <h2 className="text-3xl font-bold text-center mb-8 z-10">
+            Elevate Your Experience: Explore Our Features
+          </h2>
+          <div className="w-full max-w-6xl">
+            <InfiniteMovingCards
+              items={features}
+              direction="right"
+              speed="slow"
+            />
+          </div>
         </div>
         <div className="relative h-[40rem] overflow-hidden flex items-center justify-center">
           <WavyBackgroundcontent />
         </div>
+
+        <footer className="w-full">
+          <div className="relative h-35 md:h-64 w-full overflow-hidden bg-slate-900 flex items-center justify-center rounded-lg">
+            <div className="absolute inset-0 w-full h-full bg-slate-900 z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+            <Boxes />
+            <div className="text-center relative z-20">
+              <h1 className="md:text-4xl text-xl text-white">Feedback Nexus</h1>
+              <p className="mt-4 text-sm">
+                © 2024 Feedback Nexus. All rights reserved. Built with ❤️ by
+                Pratham.
+              </p>
+            </div>
+          </div>
+        </footer>
       </main>
     </>
   );

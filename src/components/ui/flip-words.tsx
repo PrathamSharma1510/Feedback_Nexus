@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 
 export const FlipWords = ({
   words,
-  duration = 3000,
+  duration = 4000,
   className,
 }: {
   words: string[];
@@ -51,9 +51,9 @@ export const FlipWords = ({
         }}
         exit={{
           opacity: 0,
-          y: -40,
-          x: 40,
-          filter: "blur(8px)",
+          y: -20,
+          x: 20,
+          filter: "blur(30px)",
           scale: 2,
           position: "absolute",
         }}

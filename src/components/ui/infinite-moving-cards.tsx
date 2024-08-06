@@ -92,7 +92,7 @@ export const InfiniteMovingCards = ({
               background:
                 "linear-gradient(180deg, var(--slate-800), var(--slate-900)",
             }}
-            key={item.name}
+            key={item.title}
           >
             <blockquote>
               <div
@@ -104,9 +104,9 @@ export const InfiniteMovingCards = ({
               </span>
               <div className="relative z-20 mt-6 flex flex-row items-center">
                 <span className="flex flex-col gap-1">
-                  <span className=" text-sm leading-[1.6] text-gray-400 font-normal">
+                  {/* <span className=" text-sm leading-[1.6] text-gray-400 font-normal">
                     {item.name}
-                  </span>
+                  </span> */}
                   <span className=" text-sm leading-[1.6] text-gray-400 font-normal">
                     {item.title}
                   </span>
