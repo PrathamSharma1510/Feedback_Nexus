@@ -62,10 +62,17 @@ const Page = () => {
   return (
     <div className="flex items-center justify-center min-h-screen ">
       <div className="p-8 rounded-lg antialiased shadow-md w-full max-w-md">
-        {/* <Spotlight
-          className="-top-40 left-0 md:left-60 md:-top-20"
-          fill="white"
-        /> */}
+        <div className="text-center">
+          <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
+            Join Feedback Nexus
+          </h1>
+          <p className="mb-5">
+            Back to{" "}
+            <Link className="text-blue-500 hover:underline" href={"/"}>
+              Home
+            </Link>
+          </p>
+        </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
