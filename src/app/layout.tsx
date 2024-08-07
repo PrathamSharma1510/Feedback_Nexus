@@ -7,7 +7,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Feedback Nexuss",
+  title: "Feedback Nexus",
   description: "Your feedback management system",
 };
 
