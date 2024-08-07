@@ -58,7 +58,7 @@ Feedback Nexus is developed using the latest technologies to ensure a robust and
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/PrathamSharma1510/message.
+   git clone https://github.com/PrathamSharma1510/Feedback_Nexus.
    cd feedback-nexus
    ```
 
