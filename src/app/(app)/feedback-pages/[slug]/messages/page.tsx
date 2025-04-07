@@ -45,6 +45,7 @@ export default function FeedbackPageMessages() {
   const [deletingMessageId, setDeletingMessageId] = useState<string | null>(
     null
   );
+  const [isToggling, setIsToggling] = useState(false);
   const { toast } = useToast();
   const { data: session } = useSession();
   const params = useParams();
@@ -100,6 +101,7 @@ export default function FeedbackPageMessages() {
 
   const toggleMessageAcceptance = async () => {
     try {
+      setIsToggling(true);
       const response = await axios.post(
         `/api/feedback-pages/${slug}/toggle-messages`
       );
@@ -123,6 +125,8 @@ export default function FeedbackPageMessages() {
           "Failed to toggle message acceptance",
         variant: "destructive",
       });
+    } finally {
+      setIsToggling(false);
     }
   };
 
@@ -200,24 +204,70 @@ export default function FeedbackPageMessages() {
           <div className="flex items-center gap-4">
             <Button
               onClick={toggleMessageAcceptance}
-              className={`${
+              disabled={isToggling}
+              className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 ${
                 isAcceptingMessages
-                  ? "bg-red-600 hover:bg-red-700"
-                  : "bg-green-600 hover:bg-green-700"
+                  ? "bg-red-500/10 text-red-500 hover:bg-red-500/20 border border-red-500/30"
+                  : "bg-green-500/10 text-green-500 hover:bg-green-500/20 border border-green-500/30"
               }`}
             >
-              {isAcceptingMessages ? "Stop Accepting" : "Start Accepting"}
+              {isToggling ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : isAcceptingMessages ? (
+                <>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="lucide lucide-ban"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+                  </svg>
+                  Stop Accepting
+                </>
+              ) : (
+                <>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="lucide lucide-check-circle"
+                  >
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                    <polyline points="22 4 12 14.01 9 11.01" />
+                  </svg>
+                  Start Accepting
+                </>
+              )}
             </Button>
             <Button
               onClick={copyToClipboard}
-              className="bg-purple-600 hover:bg-purple-700"
+              className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-indigo-500/10 text-indigo-500 hover:bg-indigo-500/20 border border-indigo-500/30 transition-all duration-200"
             >
               {copied ? (
-                <Check className="mr-2 h-4 w-4" />
+                <>
+                  <Check className="h-4 w-4" />
+                  Copied!
+                </>
               ) : (
-                <Copy className="mr-2 h-4 w-4" />
+                <>
+                  <Copy className="h-4 w-4" />
+                  Copy Link
+                </>
               )}
-              {copied ? "Copied!" : "Copy Link"}
             </Button>
           </div>
         </div>

@@ -164,7 +164,7 @@ export default function Page() {
             <span>New Page</span>
           </Link>
           <Link
-            href="/settings"
+            href="/profile"
             className="bg-[#3B82F6] hover:bg-[#2563EB] p-4 rounded-xl text-white text-center transition-colors duration-200"
           >
             <Cog6ToothIcon className="h-6 w-6 mx-auto mb-2" />
