@@ -102,16 +102,32 @@ export default function FeedbackPageMessages() {
   const toggleMessageAcceptance = async () => {
     try {
       setIsToggling(true);
+
+      // Optimistically update the UI
+      const newState = !isAcceptingMessages;
+      setIsAcceptingMessages(newState);
+
       const response = await axios.post(
-        `/api/feedback-pages/${slug}/toggle-messages`
+        `/api/feedback-pages/${slug}/toggle-messages`,
+        {},
+        {
+          headers: {
+            "Cache-Control": "no-cache",
+            Pragma: "no-cache",
+          },
+        }
       );
+
       if (response.data.success) {
+        // Update with the server response
         setIsAcceptingMessages(response.data.isAcceptingMessages);
         toast({
           title: "Success",
           description: response.data.message,
         });
       } else {
+        // Revert on failure
+        setIsAcceptingMessages(!newState);
         throw new Error(
           response.data.message || "Failed to toggle message acceptance"
         );
@@ -133,7 +149,12 @@ export default function FeedbackPageMessages() {
   const fetchMessages = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`/api/feedback-pages/${slug}/messages`);
+      const response = await axios.get(`/api/feedback-pages/${slug}/messages`, {
+        headers: {
+          "Cache-Control": "no-cache",
+          Pragma: "no-cache",
+        },
+      });
       if (response.data.success) {
         setMessages(response.data.data || []);
         setPageTitle(response.data.pageTitle);
@@ -155,7 +176,12 @@ export default function FeedbackPageMessages() {
 
   const fetchPageDetails = useCallback(async () => {
     try {
-      const response = await axios.get(`/api/feedback-pages/${slug}`);
+      const response = await axios.get(`/api/feedback-pages/${slug}`, {
+        headers: {
+          "Cache-Control": "no-cache",
+          Pragma: "no-cache",
+        },
+      });
       if (response.data.success) {
         setPageTitle(response.data.data.title);
         setPageDescription(response.data.data.description);

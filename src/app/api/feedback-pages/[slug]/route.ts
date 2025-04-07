@@ -32,9 +32,11 @@ export async function GET(
       feedbackPageObj.isAcceptingMessages = true;
     }
 
-    // Add cache control headers
+    // Set cache control headers to prevent caching
     const headers = new Headers();
-    headers.set('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59');
+    headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    headers.set('Pragma', 'no-cache');
+    headers.set('Expires', '0');
 
     return NextResponse.json(
       { message: "Feedback page retrieved", success: true, data: feedbackPageObj },
@@ -98,10 +100,19 @@ export async function PUT(
     if (typeof isAcceptingMessages === "boolean") feedbackPage.isAcceptingMessages = isAcceptingMessages;
 
     await feedbackPage.save();
+    
+    // Set cache control headers to prevent caching
+    const headers = new Headers();
+    headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    headers.set('Pragma', 'no-cache');
+    headers.set('Expires', '0');
 
     return NextResponse.json(
       { message: "Feedback page updated", success: true, data: feedbackPage },
-      { status: 200 }
+      { 
+        status: 200,
+        headers
+      }
     );
   } catch (error) {
     console.error("Error updating feedback page:", error);

@@ -57,6 +57,12 @@ export async function POST(
     // Save the changes
     await feedbackPage.save();
 
+    // Set cache control headers to prevent caching
+    const headers = new Headers();
+    headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    headers.set('Pragma', 'no-cache');
+    headers.set('Expires', '0');
+
     // Return a simplified response with just the success status and the new value
     return NextResponse.json(
       {
@@ -64,7 +70,10 @@ export async function POST(
         message: `Messages are now ${feedbackPage.isAcceptingMessages ? "accepted" : "not accepted"}`,
         isAcceptingMessages: feedbackPage.isAcceptingMessages
       },
-      { status: 200 }
+      { 
+        status: 200,
+        headers
+      }
     );
   } catch (error) {
     console.error("Error toggling message acceptance:", error);

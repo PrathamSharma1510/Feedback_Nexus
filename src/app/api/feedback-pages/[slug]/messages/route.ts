@@ -51,9 +51,11 @@ export async function GET(
       feedbackPage: feedbackPage._id,
     }).sort({ createdAt: -1 });
 
-    // Add cache control headers
+    // Set cache control headers to prevent caching
     const headers = new Headers();
-    headers.set('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59');
+    headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    headers.set('Pragma', 'no-cache');
+    headers.set('Expires', '0');
 
     return NextResponse.json(
       {
