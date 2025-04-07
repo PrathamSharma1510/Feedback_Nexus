@@ -24,6 +24,16 @@ export interface User extends Document {
   isVerified: boolean;
   isAcceptingMessages: boolean;
   messages: Message[];
+  // New profile fields
+  displayName?: string;
+  bio?: string;
+  profilePicture?: string;
+  theme?: 'light' | 'dark' | 'system';
+  socialLinks?: {
+    twitter?: string;
+    github?: string;
+    website?: string;
+  };
 }
 
 // Updated User schema
@@ -61,6 +71,29 @@ const UserSchema: Schema<User> = new mongoose.Schema({
     default: true,
   },
   messages: [MessageSchema],
+  // New profile fields
+  displayName: {
+    type: String,
+    trim: true,
+  },
+  bio: {
+    type: String,
+    trim: true,
+    maxlength: [500, "Bio cannot be more than 500 characters"],
+  },
+  profilePicture: {
+    type: String,
+  },
+  theme: {
+    type: String,
+    enum: ['light', 'dark', 'system'],
+    default: 'system',
+  },
+  socialLinks: {
+    twitter: String,
+    github: String,
+    website: String,
+  },
 });
 
 const UserModel =

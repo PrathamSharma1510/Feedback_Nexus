@@ -1,21 +1,13 @@
 import type { Config } from "tailwindcss"
 
-const svgToDataUri = require("mini-svg-data-uri");
-const colors = require("tailwindcss/colors");
-
-const {
-  default: flattenColorPalette,
-} = require("tailwindcss/lib/util/flattenColorPalette");
-
-const config = {
+const config: Config = {
   darkMode: ["class"],
   content: [
     './pages/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
-	],
-  prefix: "",
+  ],
   theme: {
     container: {
       center: true,
@@ -66,21 +58,6 @@ const config = {
         sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
-        "scroll": {
-          to: {
-            transform: "translate(calc(-50% - 0.5rem))",
-          },
-        },
-        "spotlight": {
-          "0%": {
-            opacity: "0",
-            transform: "translate(-72%, -62%) scale(0.5)",
-          },
-          "100%": {
-            opacity: "1",
-            transform: "translate(0, 0) scale(1)",
-          },
-        },
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -91,50 +68,12 @@ const config = {
         },
       },
       animation: {
-        "scroll": "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite",
         "accordion-down": "accordion-down 0.2s ease-out",
-        "spotlight": "spotlight 2s ease .75s 1 forwards",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
   },
-  plugins: [require("tailwindcss-animate"),addVariablesForColors,
-    function ({ matchUtilities, theme }: any) {
-    matchUtilities(
-      {
-        "bg-grid": (value: any) => ({
-          backgroundImage: `url("${svgToDataUri(
-            `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="${value}"><path d="M0 .5H31.5V32"/></svg>`
-          )}")`,
-        }),
-        "bg-grid-small": (value: any) => ({
-          backgroundImage: `url("${svgToDataUri(
-            `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="8" height="8" fill="none" stroke="${value}"><path d="M0 .5H31.5V32"/></svg>`
-          )}")`,
-        }),
-        "bg-dot": (value: any) => ({
-          backgroundImage: `url("${svgToDataUri(
-            `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="16" height="16" fill="none"><circle fill="${value}" id="pattern-circle" cx="10" cy="10" r="1.6257413380501518"></circle></svg>`
-          )}")`,
-        }),
-        "bg-dot-thick": (value: any) => ({
-            backgroundImage: `url("${svgToDataUri(
-              `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="16" height="16" fill="none"><circle fill="${value}" id="pattern-circle" cx="10" cy="10" r="2.5"></circle></svg>`
-            )}")`,
-          }),
-      },
-      { values: flattenColorPalette(theme("backgroundColor")), type: "color" }
-    );
-  },],
-} satisfies Config
-function addVariablesForColors({ addBase, theme }: any) {
-  let allColors = flattenColorPalette(theme("colors"));
-  let newVars = Object.fromEntries(
-    Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
-  );
- 
-  addBase({
-    ":root": newVars,
-  });
+  plugins: [require("tailwindcss-animate")],
 }
+
 export default config

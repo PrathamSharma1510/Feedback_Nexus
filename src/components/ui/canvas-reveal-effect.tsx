@@ -256,7 +256,8 @@ const ShaderMaterial = ({
 
   // Shader material
   const material = useMemo(() => {
-    const materialObject = new THREE.ShaderMaterial({
+    const materialObject = new THREE.RawShaderMaterial({
+      uniforms: getUniforms(),
       vertexShader: `
       precision mediump float;
       in vec2 coordinates;
@@ -271,7 +272,7 @@ const ShaderMaterial = ({
       }
       `,
       fragmentShader: source,
-      uniforms: getUniforms(),
+      transparent: true,
       glslVersion: THREE.GLSL3,
       blending: THREE.CustomBlending,
       blendSrc: THREE.SrcAlphaFactor,
@@ -279,7 +280,7 @@ const ShaderMaterial = ({
     });
 
     return materialObject;
-  }, [size.width, size.height, source]);
+  }, [size.width, size.height, source, getUniforms]);
 
   return (
     <mesh ref={ref as any}>

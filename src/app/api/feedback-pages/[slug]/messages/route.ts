@@ -6,7 +6,10 @@ import MessageModel from "@/model/Message";
 import FeedbackPageModel from "@/model/FeedbackPage";
 import UserModel from "@/model/User";
 
-export async function GET(request: Request) {
+export async function GET(
+  request: Request,
+  { params }: { params: { slug: string } }
+) {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user) {
@@ -27,30 +30,44 @@ export async function GET(request: Request) {
       );
     }
 
-    // Get all feedback pages for the user
-    const feedbackPages = await FeedbackPageModel.find({
+    // Find the feedback page by slug and user
+    const feedbackPage = await FeedbackPageModel.findOne({
+      slug: params.slug,
       user: user._id,
     });
 
-    if (!feedbackPages.length) {
+    if (!feedbackPage) {
       return NextResponse.json(
-        { message: "No feedback pages found", success: true, data: [] },
-        { status: 200 }
+        { message: "Feedback page not found", success: false },
+        { status: 404 }
       );
     }
 
-    const feedbackPageIds = feedbackPages.map((page) => page._id);
+    // Log the value for debugging
+    console.log("Messages API - Feedback page isAcceptingMessages:", feedbackPage.isAcceptingMessages);
 
-    // Get all messages for the user's feedback pages
+    // Get all messages for this feedback page
     const messages = await MessageModel.find({
-      feedbackPage: { $in: feedbackPageIds },
-    })
-      .populate("feedbackPage", "title")
-      .sort({ createdAt: -1 });
+      feedbackPage: feedbackPage._id,
+    }).sort({ createdAt: -1 });
+
+    // Add cache control headers
+    const headers = new Headers();
+    headers.set('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59');
 
     return NextResponse.json(
-      { message: "Messages retrieved", success: true, data: messages },
-      { status: 200 }
+      {
+        message: "Messages retrieved",
+        success: true,
+        data: messages,
+        pageTitle: feedbackPage.title,
+        pageDescription: feedbackPage.description,
+        isAcceptingMessages: feedbackPage.isAcceptingMessages === true
+      },
+      { 
+        status: 200,
+        headers
+      }
     );
   } catch (error) {
     console.error("Error retrieving messages:", error);
@@ -59,4 +76,4 @@ export async function GET(request: Request) {
       { status: 500 }
     );
   }
-}
+} 

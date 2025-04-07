@@ -1,78 +1,58 @@
 "use client";
 
 import { useToast } from "@/components/ui/use-toast";
-// import { Message } from "@/model/User";
 import { useCallback, useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import axios, { AxiosError } from "axios";
-import { Switch } from "@headlessui/react";
-import { Loader, Placeholder } from "rsuite";
-import { HoverEffect } from "@/components/ui/card-hover-effect";
 import { motion } from "framer-motion";
-import { IconButton } from "@material-tailwind/react";
-import { useCopyToClipboard } from "usehooks-ts";
-import { CheckIcon, DocumentDuplicateIcon } from "@heroicons/react/24/outline";
+import {
+  UserCircleIcon,
+  PlusIcon,
+  ChartBarIcon,
+  Cog6ToothIcon,
+  DocumentTextIcon,
+} from "@heroicons/react/24/outline";
 import { HeroHighlight, Highlight } from "@/components/ui/hero-highlight";
 import { Button } from "@/components/ui/moving-border";
+import Link from "next/link";
+import { MessageList } from "@/components/ui/message-list";
+import { Loader2 } from "lucide-react";
+
 interface Message {
   _id: string;
   content: string;
   createdAt: string;
+  feedbackPage: {
+    title: string;
+  };
 }
 
 export default function Page() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [value, setValue] = useState<boolean>(false); // Changed initial state to false
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const { toast } = useToast();
-  const { data: session } = useSession();
-
-  const DeleteMessage = (messageId: string) => {
-    setMessages(messages.filter((message) => message._id !== messageId));
-    toast({
-      title: "Success",
-      description: "Message was deleted successfully",
-    });
-    Deletefullmessage(messageId, session?.user.username);
-  };
-
-  const fetchAcceptMessage = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const response = await axios.get("/api/acceptmessage");
-      setValue(response.data.message); // Assuming the response has { success: true, message: boolean }
-    } catch (error) {
-      const axiosError = error as AxiosError<{ message: string }>;
-      toast({
-        title: "Error",
-        description:
-          axiosError.response?.data?.message ?? "Failed to fetch message",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  }, [toast]);
-
-  const Deletefullmessage = async (messageId: string, username: string) => {
-    try {
-      await axios.post("/api/delete-message", {
-        messageId,
-        username,
-      });
-    } catch (error) {
-      console.error("Error deleting message:", error);
-    }
-  };
+  const { data: session, status } = useSession();
+  const [todayMessages, setTodayMessages] = useState(0);
+  const [activePages, setActivePages] = useState(0);
 
   const fetchMessages = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await axios.get("/api/getmessages");
-      console.log(response.data);
-      setMessages(response.data.messages || []);
+      if (response.data.success) {
+        setMessages(response.data.data || []);
+        // Calculate today's messages
+        const today = new Date().toISOString().split("T")[0];
+        const todayCount = (response.data.data || []).filter(
+          (msg: Message) =>
+            new Date(msg.createdAt).toISOString().split("T")[0] === today
+        ).length;
+        setTodayMessages(todayCount);
+      }
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
-      if (axiosError.response?.data?.message != "No message found") {
+      if (axiosError.response?.data?.message !== "No message found") {
         toast({
           title: "Error",
           description:
@@ -81,80 +61,52 @@ export default function Page() {
       }
     } finally {
       setIsLoading(false);
+      setIsInitialLoading(false);
+    }
+  }, [toast]);
+
+  // Fetch active pages count
+  const fetchActivePages = useCallback(async () => {
+    try {
+      const response = await axios.get("/api/feedback-pages");
+      if (response.data.success) {
+        const pages = response.data.data || [];
+        const activePagesCount = pages.filter(
+          (page: any) => page.isActive
+        ).length;
+        setActivePages(activePagesCount);
+      }
+    } catch (error) {
+      console.error("Error fetching active pages:", error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch active pages",
+      });
     }
   }, [toast]);
 
   useEffect(() => {
     if (!session || !session.user) return;
 
-    fetchAcceptMessage();
+    // Fetch initial data
     fetchMessages();
-  }, [session, fetchAcceptMessage, fetchMessages]);
+    fetchActivePages();
 
-  const toggleAcceptMessages = useCallback(async () => {
-    if (value === null) return; // Ensure value is not null
+    // Set up periodic refresh every 30 seconds
+    const refreshInterval = setInterval(() => {
+      fetchMessages();
+      fetchActivePages();
+    }, 30000);
 
-    setIsLoading(true);
-    try {
-      const response = await axios.post("/api/acceptmessage", {
-        acceptMessage: !value,
-      });
-      setValue(!value); // Toggle the current value
-      toast({
-        title: "Success",
-        description: response.data.message,
-      });
-    } catch (error) {
-      const axiosError = error as AxiosError<{ message: string }>;
-      toast({
-        title: "Error",
-        description:
-          axiosError.response?.data?.message ?? "Failed to update status",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  }, [value, toast]);
+    // Cleanup interval on unmount
+    return () => clearInterval(refreshInterval);
+  }, [session, fetchMessages, fetchActivePages]);
 
-  const [profileUrl, setProfileUrl] = useState("");
-
-  useEffect(() => {
-    if (typeof window !== "undefined" && session?.user.username) {
-      const baseUrl = `${window.location.protocol}//${window.location.host}`;
-      setProfileUrl(`${baseUrl}/u/${session?.user.username}`);
-    }
-  }, [session]);
-
-  const [valuec, copy] = useCopyToClipboard();
-  const [copied, setCopied] = useState(false);
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(profileUrl);
-    toast({
-      title: "URL Copied!",
-      description: "Profile URL has been copied to clipboard.",
-    });
-  };
-
-  if (!session || !session.user) {
+  if (status === "loading" || !session || !session.user) {
     return (
       <div className="flex justify-center items-center h-screen">
         <div role="status">
-          <svg
-            aria-hidden="true"
-            className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
-            viewBox="0 0 100 101"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-              fill="currentColor"
-            />
-            <path
-              d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-              fill="currentFill"
-            />
-          </svg>
+          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
           <span className="sr-only">Loading...</span>
         </div>
       </div>
@@ -162,121 +114,97 @@ export default function Page() {
   }
 
   return (
-    <div>
-      <HeroHighlight>
-        <motion.h1
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          animate={{
-            opacity: 1,
-            y: [20, -5, 0],
-          }}
-          transition={{
-            duration: 0.5,
-            ease: [0.4, 0.0, 0.2, 1],
-          }}
-          className="mb-5 text-lg sm:text-xl md:text-3xl lg:text-4xl font-bold text-neutral-700 dark:text-white max-w-3xl leading-relaxed lg:leading-snug mx-auto px-2 sm:px-4"
-        >
-          Your Link{" "}
-          <div
-            className="cursor-pointer inline-block"
-            onClick={() => copyToClipboard()}
-          >
-            <Highlight className="text-black dark:text-white break-all">
-              {profileUrl}
-            </Highlight>
+    <div className="min-h-screen bg-black">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Profile Section */}
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-white">
+              Welcome back
+              {session?.user?.username ? `, ${session.user.username}` : ""}!
+            </h1>
+            <p className="text-neutral-400">
+              Manage your feedback and messages
+            </p>
           </div>
-          <button
-            className="w-1/2"
-            onMouseLeave={() => setCopied(false)}
-            onClick={() => {
-              copyToClipboard();
-              setCopied(true);
-            }}
+          <Link
+            href="/profile"
+            className="flex items-center space-x-2 text-neutral-300 hover:text-white transition-colors"
           >
-            {copied ? (
-              <CheckIcon className="h-5 w-5 text-white" />
-            ) : (
-              <DocumentDuplicateIcon className="h-5 w-5 text-white" />
-            )}
-          </button>
-        </motion.h1>
-
-        <div className="sm:flex px-5 sm:flex-row justify-between items-center mt-5 space-y-4 sm:space-y-0">
-          {value ? (
-            <p className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500">
-              Accepting messages
-            </p>
-          ) : (
-            <p className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500">
-              Not Accepting messages
-            </p>
-          )}
-          <Switch
-            checked={value}
-            onChange={toggleAcceptMessages}
-            className={`${value ? "bg-blue-500" : "bg-gray-300"}
-    relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ml-4`}
-          >
-            <span
-              className={`${value ? "translate-x-5" : "translate-x-1"}
-      inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
-            />
-          </Switch>
+            <UserCircleIcon className="h-8 w-8" />
+            <span className="hidden sm:inline">Profile</span>
+          </Link>
         </div>
-      </HeroHighlight>
 
-      <div className="max-w-5xl mx-auto">
-        <p className="text-2xl sm:text-4xl md:text-4xl lg:text-5xl font-bold relative z-20 bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 mt-3 sm:mt-4 md:mt-5 lg:mt-6 text-center">
-          Number of messages: {messages.length}
-        </p>
+        {/* Analytics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-gray-900 rounded-xl p-6 border border-gray-800">
+            <h3 className="text-lg text-neutral-400 mb-2">Total Messages</h3>
+            <p className="text-3xl font-bold text-white">{messages.length}</p>
+          </div>
+          <div className="bg-gray-900 rounded-xl p-6 border border-gray-800">
+            <h3 className="text-lg text-neutral-400 mb-2">
+              Today&apos;s Messages
+            </h3>
+            <p className="text-3xl font-bold text-white">{todayMessages}</p>
+          </div>
+          <div className="bg-gray-900 rounded-xl p-6 border border-gray-800">
+            <h3 className="text-lg text-neutral-400 mb-2">Active Pages</h3>
+            <p className="text-3xl font-bold text-white">{activePages}</p>
+          </div>
+        </div>
 
-        <HoverEffect items={messages} onDeleteMessage={DeleteMessage} />
-      </div>
-      {/* <div className="grid gap-4 mt-4">
-        {messages.map((message) => (
-          <div
-            className="p-4 bg-white shadow-md rounded-lg flex justify-between items-start"
-            key={message._id}
+        {/* Quick Actions */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+          <Link
+            href="/feedback-pages"
+            className="bg-[#7C3AED] hover:bg-[#6D28D9] p-4 rounded-xl text-white text-center transition-colors duration-200"
           >
-            <div>
-              <p className="text-lg font-semibold">{message.content}</p>
-              <p className="text-sm text-gray-500">
-                {dayjs(message.createdAt).format("MMM D, YYYY h:mm A")}
+            <PlusIcon className="h-6 w-6 mx-auto mb-2" />
+            <span>New Page</span>
+          </Link>
+          <Link
+            href="/settings"
+            className="bg-[#3B82F6] hover:bg-[#2563EB] p-4 rounded-xl text-white text-center transition-colors duration-200"
+          >
+            <Cog6ToothIcon className="h-6 w-6 mx-auto mb-2" />
+            <span>Settings</span>
+          </Link>
+          <Link
+            href="/analytics"
+            className="bg-[#10B981] hover:bg-[#059669] p-4 rounded-xl text-white text-center transition-colors duration-200"
+          >
+            <ChartBarIcon className="h-6 w-6 mx-auto mb-2" />
+            <span>Analytics</span>
+          </Link>
+        </div>
+
+        {/* Messages Section */}
+        <div className="bg-gray-900 rounded-xl p-6 border border-gray-800">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-white">Recent Messages</h2>
+            <p className="text-neutral-400">Total: {messages.length}</p>
+          </div>
+          {isInitialLoading ? (
+            <div className="flex justify-center items-center py-10">
+              <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+            </div>
+          ) : isLoading ? (
+            <div className="flex justify-center items-center py-10">
+              <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+            </div>
+          ) : messages.length === 0 ? (
+            <div className="text-center py-10 text-neutral-400">
+              <p>
+                No messages yet. Create a feedback page to start receiving
+                messages.
               </p>
             </div>
-            <div className="flex items-center space-x-2">
-              <button
-                className="bg-red-500 text-white px-3 py-1 rounded-md"
-                onClick={() => DeleteMessage(message._id)}
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        ))}
-      </div> */}
-      {isLoading && (
-        <div className="flex justify-center items-center mt-4">
-          <div className="border border-blue-300 shadow rounded-md p-4 max-w-sm w-full mx-auto">
-            <div className="animate-pulse flex space-x-4">
-              <div className="rounded-full bg-slate-700 h-10 w-10"></div>
-              <div className="flex-1 space-y-6 py-1">
-                <div className="h-2 bg-slate-700 rounded"></div>
-                <div className="space-y-3">
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="h-2 bg-slate-700 rounded col-span-2"></div>
-                    <div className="h-2 bg-slate-700 rounded col-span-1"></div>
-                  </div>
-                  <div className="h-2 bg-slate-700 rounded"></div>
-                </div>
-              </div>
-            </div>
-          </div>
+          ) : (
+            <MessageList items={messages} />
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }
